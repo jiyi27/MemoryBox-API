@@ -16,7 +16,7 @@ public class AppConfiguration(IConfiguration configuration)
         ConfigureJsonServices(services);
     }
     
-    public void ConfigureAuthServices(IServiceCollection services)
+    private void ConfigureAuthServices(IServiceCollection services)
     {
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
@@ -40,7 +40,7 @@ public class AppConfiguration(IConfiguration configuration)
             });
     }
     
-    public void ConfigureDatabaseServices(IServiceCollection services)
+    private void ConfigureDatabaseServices(IServiceCollection services)
     {
         // DbContext Service, 依赖注入到 EF Core: DatabaseContext
         var connectionString = configuration.GetConnectionString("DefaultConnection");
@@ -48,7 +48,7 @@ public class AppConfiguration(IConfiguration configuration)
             options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
     }
     
-    public void ConfigureJsonServices(IServiceCollection services)
+    private void ConfigureJsonServices(IServiceCollection services)
     {
         // Prevent reference loop in JSON serialization.
         services.AddControllers().AddJsonOptions(x =>
