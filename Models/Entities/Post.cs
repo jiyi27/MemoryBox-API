@@ -6,12 +6,12 @@ namespace MemoryBox_API.Models.Entities;
 public class Post
 {
     public int PostId { get; init; }
-    public required int BoxId { get; init; }
-    public string? Title { get; set; }
-    public string? Content { get; set; }
-    public DateTime? CreatedDate { get; init; } = DateTime.Now;
-    
-    public virtual List<Image>? Images { get; set; }
+    public int BoxId { get; set; }
+    public string? Title { get; init; }
+    public string? Content { get; init; }
+    public DateTime CreatedDate { get; init; } = DateTime.Now;
+
+    public virtual List<Image> Images { get; init; } = [];
 }
 
 public class Image(int postId, string url)
