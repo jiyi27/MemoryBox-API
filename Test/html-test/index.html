@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JWT Test Page</title>
+    <link rel="stylesheet" type="text/css" href="index.css">
+    <script defer src="index.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.3.4/axios.min.js"></script>
+</head>
+<body>
+    <h2>Register</h2>
+    <form id="registerForm">
+        <input type="text" id="regFullName" name="regFullName" placeholder="Full Name" required>
+        <input type="text" id="regUsername" name="regUsername" placeholder="Username" required>
+        <input type="password" id="regPassword" name="regPassword" placeholder="Password" required>
+        <input type="email" id="regEmail" name="regEmail" placeholder="Email">
+        <input type="file" id="profileImage" name="profileImage">
+        <button type="submit">Register</button>
+    </form>
+
+    <h2>Login</h2>
+    <form id="loginForm">
+        <input type="text" id="loginUsername" name="loginUsername" placeholder="Username" required>
+        <input type="password" id="loginPassword" name="loginPassword" placeholder="Password" required>
+        <button type="submit">Login</button>
+    </form>
+
+    <h2>Create Post</h2>
+    <input type="text" id="boxId" placeholder="Box Id"/>
+    <form id="createPostForm" enctype="multipart/form-data">
+        <input type="text" id="postTitle" name="postTitle" placeholder="Post Title">
+        <input type="text" id="postContent" name="postContent" placeholder="Post Content">
+        <input type="file" id="postImages" name="postImages" multiple />
+        <button type="submit">Create Post</button>
+    </form>
+
+    <div>
+        <h2>Get All Posts</h2>
+        <button id="getPostsBtn">Get Posts</button>
+    </div>
+
+    <div>
+        <h2>Get All Boxes</h2>
+        <button id="getBoxesBtn">Get Boxes</button>
+    </div>
+
+    <div>
+        <h2>Delete Box</h2>
+        <input type="text" id="deleteBoxId" placeholder="Box ID" required>
+        <button id="deleteBoxBtn">Delete Box</button>
+    </div>
+
+    <div>
+        <h2>Delete Post</h2>
+        <input type="text" id="deletePostId" placeholder="Post ID" required>
+        <button id="deletePostBtn">Delete Post</button>
+    </div>
+</body>
+</html>
