@@ -4,7 +4,6 @@ using System.Text;
 using MemoryBox_API.Models;
 using MemoryBox_API.Models.Dto;
 using MemoryBox_API.Models.Entities;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -15,18 +14,6 @@ namespace MemoryBox_API.Controllers;
 [Route("api/auth")]
 public class AuthController(DatabaseContext context, IConfiguration configuration, ILogger<AuthController> logger) : ControllerBase
 {
-    [HttpPost("login")]
-    public async Task<IActionResult> Login(UserLoginDto userLoginDto)
-    {
-        var user = await AuthenticateUser(userLoginDto);
-        if (user == null)
-        {
-            return BadRequest("Invalid username or password");
-        }
-
-        var token = GenerateToken(user);
-        return Ok(new {token});
-    }
     
     [HttpPost("register")]
     public async Task<IActionResult> Register(UserRegisterDto userRegisterDto)
@@ -35,7 +22,7 @@ public class AuthController(DatabaseContext context, IConfiguration configuratio
             .FirstOrDefaultAsync(u => u.Username == userRegisterDto.Username);
         if (existingUser != null)
         {
-            return Conflict("Username already exists");
+            return Conflict(new { message = "Username already exist." });
         }
 
         var user = new User
@@ -43,12 +30,26 @@ public class AuthController(DatabaseContext context, IConfiguration configuratio
             FullName = userRegisterDto.FullName,
             Username = userRegisterDto.Username,
             Password = userRegisterDto.Password,
-            Email = userRegisterDto.Email
+            Email = userRegisterDto.Email,
+            ProfilePictureUrl = userRegisterDto.ProfilePictureUrl
         };
         context.Users.Add(user);
         await context.SaveChangesAsync();
 
-        return Ok();
+        return Created();
+    }
+
+    [HttpPost("login")]
+    public async Task<IActionResult> Login(UserLoginDto userLoginDto)
+    {
+        var user = await AuthenticateUser(userLoginDto);
+        if (user == null)
+        {
+            return BadRequest(new { message = "Invalid username or password." });
+        }
+
+        var token = GenerateToken(user);
+        return Ok(new {token});
     }
     
     private async Task<User?> AuthenticateUser(UserLoginDto userLoginDto)
