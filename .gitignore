@@ -5,7 +5,7 @@
 
 # Environment-specific app settings
 appsettings.Development.json
-
+appsettings.json
 # NuGet Packages
 *.nupkg
 

@@ -1,6 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Amazon.S3;
 using MemoryBox_API.Models;
 using MemoryBox_API.Models.Dto;
 using MemoryBox_API.Models.Entities;
@@ -12,7 +13,7 @@ namespace MemoryBox_API.Controllers;
 
 [ApiController]
 [Route("api/auth")]
-public class AuthController(DatabaseContext context, IConfiguration configuration, ILogger<AuthController> logger) : ControllerBase
+public class AuthController(DatabaseContext context, IConfiguration configuration, IAmazonS3 s3Client) : ControllerBase
 {
     
     [HttpPost("register")]
@@ -31,7 +32,6 @@ public class AuthController(DatabaseContext context, IConfiguration configuratio
             Username = userRegisterDto.Username,
             Password = userRegisterDto.Password,
             Email = userRegisterDto.Email,
-            ProfilePictureUrl = userRegisterDto.ProfilePictureUrl
         };
         context.Users.Add(user);
         await context.SaveChangesAsync();

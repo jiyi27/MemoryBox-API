@@ -53,24 +53,8 @@ public class BoxController(DatabaseContext context) : ControllerBase
         box.OwnerId = userId;
         context.Boxes.Add(box);
         await context.SaveChangesAsync();
-        
-        // EF Core will update the local entity with the generated BoxId after SaveChanges.
-        // Load the Owner if needed
-        await context.Entry(box).Reference(b => b.Owner).LoadAsync();
-        
-        var createdBox = new
-        {
-            box.BoxId,
-            box.BoxName,
-            box.IsPrivate,
-            box.CreatedDate,
-            Owner = box.Owner != null ? new
-            {
-                box.Owner.FullName,
-            } : null
-        };
 
-        return StatusCode(201, createdBox);
+        return Created();
     }
     
     [Authorize]

@@ -5,6 +5,7 @@ let token = ''
 
 const registerForm = document.getElementById('registerForm')
 const loginForm = document.getElementById('loginForm')
+const createBoxForm = document.getElementById('createBoxForm')
 const createPostForm = document.getElementById('createPostForm')
 const getBoxesButton = document.getElementById('getBoxesBtn')
 const getPostsButton = document.getElementById('getPostsBtn')
@@ -66,6 +67,35 @@ loginForm.addEventListener('submit', async (e) => {
     }
 });
 
+createBoxForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const formData = {
+        boxName: createBoxForm.boxName.value,
+        isPrivate: createBoxForm.isPrivate.checked
+    };
+
+    try {
+        const response = await axios.post(`${API_URL}/api/boxes`, formData, {
+            headers: {
+                'Content-Type': 'application/json',
+        }});
+        console.log("Box created successfully");
+
+    } catch (error) {
+        handleAxiosError(error, 'create box');
+    }
+})
+
+getBoxesButton.addEventListener('click', async () => {
+    try {
+        const response = await axios.get(`${API_URL}/api/boxes`);
+        console.log(response.data);
+    } catch (error) {
+        handleAxiosError(error, 'get boxes');
+    }
+})
+
 createPostForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -97,15 +127,6 @@ createPostForm.addEventListener('submit', async (e) => {
         handleAxiosError(error, 'create post');
     }
 });
-
-getBoxesButton.addEventListener('click', async () => {
-    try {
-        const response = await axios.get(`${API_URL}/api/boxes`);
-        console.log(response.data);
-    } catch (error) {
-        handleAxiosError(error, 'get boxes');
-    }
-})
 
 getPostsButton.addEventListener('click', async () => {
     const boxId = document.getElementById('boxId').value;
