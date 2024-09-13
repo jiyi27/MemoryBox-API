@@ -1,6 +1,7 @@
 using System.Text;
 using System.Text.Json.Serialization;
 using MemoryBox_API.Models;
+using MemoryBox_API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -14,6 +15,7 @@ public class AppConfiguration(IConfiguration configuration)
         ConfigureAuthServices(services);
         ConfigureDatabaseServices(services);
         ConfigureJsonServices(services);
+        ConfigureR2Services(services);
     }
     
     private void ConfigureAuthServices(IServiceCollection services)
@@ -48,10 +50,15 @@ public class AppConfiguration(IConfiguration configuration)
             options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
     }
     
-    private void ConfigureJsonServices(IServiceCollection services)
+    private static void ConfigureJsonServices(IServiceCollection services)
     {
         // Prevent reference loop in JSON serialization.
         services.AddControllers().AddJsonOptions(x =>
             x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
+    }
+    
+    private static void ConfigureR2Services(IServiceCollection services)
+    {
+        services.AddSingleton<R2Service>();
     }
 }

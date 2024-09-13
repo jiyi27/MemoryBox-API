@@ -1,10 +1,10 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Amazon.S3;
 using MemoryBox_API.Models;
 using MemoryBox_API.Models.Dto;
 using MemoryBox_API.Models.Entities;
+using MemoryBox_API.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -13,8 +13,15 @@ namespace MemoryBox_API.Controllers;
 
 [ApiController]
 [Route("api/auth")]
-public class AuthController(DatabaseContext context, IConfiguration configuration, IAmazonS3 s3Client) : ControllerBase
+public class AuthController(DatabaseContext context, IConfiguration configuration, R2Service r2Service) : ControllerBase
 {
+    
+    [HttpGet("get-presigned-url")]
+    public async Task<IActionResult> GetPresignedUrl([FromQuery] string fileName, [FromQuery] string fileType)
+    {
+        var (presignedUrl, imageUrl) = await r2Service.GeneratePresignedUrl(fileName, fileType);
+        return Ok(new { presignedUrl, imageUrl });
+    }
     
     [HttpPost("register")]
     public async Task<IActionResult> Register(UserRegisterDto userRegisterDto)
