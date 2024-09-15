@@ -16,7 +16,7 @@ namespace MemoryBox_API.Controllers;
 public class AuthController(DatabaseContext context, IConfiguration configuration, R2Service r2Service) : ControllerBase
 {
     
-    [HttpGet("get-presigned-url")]
+    [HttpGet("presigned-url")]
     public async Task<IActionResult> GetPresignedUrl([FromQuery] string fileName, [FromQuery] string fileType)
     {
         var (presignedUrl, imageUrl) = await r2Service.GeneratePresignedUrl(fileName, fileType);
@@ -39,6 +39,7 @@ public class AuthController(DatabaseContext context, IConfiguration configuratio
             Username = userRegisterDto.Username,
             Password = userRegisterDto.Password,
             Email = userRegisterDto.Email,
+            ProfilePictureUrl = userRegisterDto.ProfilePictureUrl
         };
         context.Users.Add(user);
         await context.SaveChangesAsync();

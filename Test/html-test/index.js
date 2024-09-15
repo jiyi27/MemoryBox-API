@@ -20,27 +20,40 @@ registerForm.addEventListener('submit', async (e) => {
     const username = registerForm.regUsername.value;
     const password = registerForm.regPassword.value;
     const email = registerForm.regEmail.value;
-    const fileInput = document.getElementById('profileImage')[0];
 
-    const formData = new FormData();
-    formData.append('fullName', fullName);
-    formData.append('username', username);
-    formData.append('password', password);
-
+    const userData = {
+        fullName,
+        username,
+        password
+    };
     if (email) {
-        formData.append('email', email);
-    }
-    if (fileInput) {
-        formData.append('profileImage', fileInput);
+        userData.email = email;
     }
 
+    const file = document.getElementById('profileImage').files[0];
     try {
-        const response = await axios.post(`${API_URL}/api/auth/register`, formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        });
+        if (file) {
+            console.log("Uploading image...");
+            const presignedUrlResponse = await axios.get(`${API_URL}/api/auth/presigned-url`, {
+                params: { fileName: file.name, fileType: file.type }
+            });
+            const { presignedUrl, imageUrl } = presignedUrlResponse.data;
 
+            console.log("Received presigned URL:", presignedUrl);
+
+            // Upload the file to S3 using the pre-signed URL
+            await axios.put(presignedUrl, file, {
+                headers: { 'Content-Type': file.type }
+            });
+            console.log("Image uploaded successfully: ", imageUrl);
+
+            userData.profileImage = imageUrl;
+        }
+        console.log("Registering user...");
+
+        const response = await axios.post(`${API_URL}/api/auth/register`, userData, {
+            headers: {'Content-Type': 'application/json'}
+        });
         console.log("User registered successfully");
     } catch (error) {
         handleAxiosError(error, 'register');

@@ -13,8 +13,8 @@ public class R2Service
         var accessKey = configuration["AWS:S3:AccessKey"];
         var secretKey = configuration["AWS:S3:SecretKey"];
         var endpoint = configuration["AWS:S3:Endpoint"];
-        _bucketName = configuration["CloudflareR2:S3:BucketName"] 
-                      ?? throw new ArgumentNullException(nameof(configuration), "CloudflareR2:S3:BucketName is not configured");
+        _bucketName = configuration["AWS:S3:BucketName"] 
+                      ?? throw new ArgumentNullException(nameof(configuration), "AWS:S3:BucketName is not configured");
 
         var config = new AmazonS3Config
         {
@@ -27,14 +27,13 @@ public class R2Service
 
     public async Task<(string PresignedUrl, string ImageUrl)> GeneratePresignedUrl(string fileName, string fileType)
     {
-        var key = $"profile-images/{Guid.NewGuid()}-{fileName}";
+        var key = $"{Guid.NewGuid()}-{fileName}";
         var request = new GetPreSignedUrlRequest
         {
             BucketName = _bucketName,
             Key = key,
             Verb = HttpVerb.PUT,
             Expires = DateTime.UtcNow.AddMinutes(15),
-            ContentType = fileType
         };
 
         var presignedUrl = await _r2Client.GetPreSignedURLAsync(request);
