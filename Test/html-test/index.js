@@ -33,7 +33,6 @@ registerForm.addEventListener('submit', async (e) => {
     const file = document.getElementById('profileImage').files[0];
     try {
         if (file) {
-            console.log("Uploading image...");
             const presignedUrlResponse = await axios.get(`${API_URL}/api/auth/presigned-url`, {
                 params: { fileName: file.name, fileType: file.type }
             });
@@ -41,21 +40,24 @@ registerForm.addEventListener('submit', async (e) => {
 
             console.log("Received presigned URL:", presignedUrl);
 
-            // Upload the file to S3 using the pre-signed URL
-            await axios.put(presignedUrl, file, {
-                headers: { 'Content-Type': file.type }
-            });
-            console.log("Image uploaded successfully: ", imageUrl);
+            try {
+                await axios.put(presignedUrl, file, {
+                    headers: {'Content-Type': file.type}
+                });
 
-            userData.profileImage = imageUrl;
+                userData.profileImage = imageUrl;
+            } catch (uploadError) {
+                console.error("Error uploading image:", uploadError);
+                return
+            }
         }
-        console.log("Registering user...");
 
-        const response = await axios.post(`${API_URL}/api/auth/register`, userData, {
+        await axios.post(`${API_URL}/api/auth/register`, userData, {
             headers: {'Content-Type': 'application/json'}
         });
         console.log("User registered successfully");
     } catch (error) {
+        console.error("Registration error:", error);
         handleAxiosError(error, 'register');
     }
 });

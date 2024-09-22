@@ -16,11 +16,7 @@ public class R2Service
         _bucketName = configuration["AWS:S3:BucketName"] 
                       ?? throw new ArgumentNullException(nameof(configuration), "AWS:S3:BucketName is not configured");
 
-        var config = new AmazonS3Config
-        {
-            ServiceURL = endpoint,
-            ForcePathStyle = true
-        };
+        var config = new AmazonS3Config { ServiceURL = endpoint };
 
         _r2Client = new AmazonS3Client(accessKey, secretKey, config);
     }
@@ -33,7 +29,8 @@ public class R2Service
             BucketName = _bucketName,
             Key = key,
             Verb = HttpVerb.PUT,
-            Expires = DateTime.UtcNow.AddMinutes(15),
+            ContentType = fileType,
+            Expires = DateTime.Now.AddMinutes(50),
         };
 
         var presignedUrl = await _r2Client.GetPreSignedURLAsync(request);
