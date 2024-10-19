@@ -6,7 +6,7 @@ public class UserRegisterDto
     public required string Username { get; set; }
     public required string Password { get; set; }
     public string? Email { get; set; }
-    public string? ProfilePictureUrl { get; set; }
+    public string? avatarURL { get; set; }
 }
 
 public class UserLoginDto

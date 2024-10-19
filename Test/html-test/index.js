@@ -44,7 +44,6 @@ registerForm.addEventListener('submit', async (e) => {
                 await axios.put(presignedUrl, file, {
                     headers: {'Content-Type': file.type}
                 });
-
                 userData.profileImage = imageUrl;
             } catch (uploadError) {
                 console.error("Error uploading image:", uploadError);

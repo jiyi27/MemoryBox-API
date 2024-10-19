@@ -1,3 +1,4 @@
+using Amazon;
 using Amazon.S3;
 using Amazon.S3.Model;
 
@@ -32,7 +33,7 @@ public class R2Service
             ContentType = fileType,
             Expires = DateTime.Now.AddMinutes(50),
         };
-
+        
         var presignedUrl = await _r2Client.GetPreSignedURLAsync(request);
         var imageUrl = $"{_r2Client.Config.ServiceURL}/{_bucketName}/{key}";
 

@@ -39,7 +39,7 @@ public class AuthController(DatabaseContext context, IConfiguration configuratio
             Username = userRegisterDto.Username,
             Password = userRegisterDto.Password,
             Email = userRegisterDto.Email,
-            ProfilePictureUrl = userRegisterDto.ProfilePictureUrl
+            ProfilePictureUrl = userRegisterDto.avatarURL
         };
         context.Users.Add(user);
         await context.SaveChangesAsync();
