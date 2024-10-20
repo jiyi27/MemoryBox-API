@@ -17,7 +17,12 @@ public class R2Service
         _bucketName = configuration["AWS:S3:BucketName"] 
                       ?? throw new ArgumentNullException(nameof(configuration), "AWS:S3:BucketName is not configured");
 
-        var config = new AmazonS3Config { ServiceURL = endpoint };
+        var config = new AmazonS3Config { 
+            ServiceURL = endpoint,
+            SignatureVersion = "4",
+            ForcePathStyle = true,
+            AuthenticationRegion = "auto",
+        };
 
         _r2Client = new AmazonS3Client(accessKey, secretKey, config);
     }
