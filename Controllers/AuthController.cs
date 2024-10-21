@@ -44,7 +44,7 @@ public class AuthController(DatabaseContext context, IConfiguration configuratio
         context.Users.Add(user);
         await context.SaveChangesAsync();
 
-        return Created();
+        return Created("", new {message = "Register successful."});
     }
 
     [HttpPost("login")]
@@ -57,7 +57,7 @@ public class AuthController(DatabaseContext context, IConfiguration configuratio
         }
 
         var token = GenerateToken(user);
-        return Ok(new {token});
+        return Ok(new {token, message = "Login successful."});
     }
     
     private async Task<User?> AuthenticateUser(UserLoginDto userLoginDto)
