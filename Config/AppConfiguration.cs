@@ -53,8 +53,9 @@ public class AppConfiguration(IConfiguration configuration)
     private static void ConfigureJsonServices(IServiceCollection services)
     {
         // Prevent reference loop in JSON serialization.
+        // Don't use =ReferenceHandler.Preserve, it will add $id and $values to the JSON.
         services.AddControllers().AddJsonOptions(x =>
-            x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
+            x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
     }
     
     private static void ConfigureR2Services(IServiceCollection services)

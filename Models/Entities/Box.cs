@@ -5,7 +5,7 @@ namespace MemoryBox_API.Models.Entities;
 public class Box
 {
     public int BoxId { get; init; }
-    public required int OwnerId { get; set; }
+    public int OwnerId { get; set; }
     public required string BoxName { get; set; }
     public bool IsPrivate { get; set; }
     public DateTime? CreatedDate { get; init; } = DateTime.Now;

@@ -57,7 +57,7 @@ public class AuthController(DatabaseContext context, IConfiguration configuratio
         }
 
         var token = GenerateToken(user);
-        return Ok(new {token, message = "Login successful."});
+        return Ok(new {token, userId = user.UserId.ToString(), message = "Login successful."});
     }
     
     private async Task<User?> AuthenticateUser(UserLoginDto userLoginDto)
